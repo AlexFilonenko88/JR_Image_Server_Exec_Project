@@ -33,6 +33,8 @@ async def index(request: Request):
         and file.suffix.lower() in ALLOWED_EXTENSIONS
     ]
 
+    print(images)
+
     return templates.TemplateResponse(
         request=request,
         name='index.html',
@@ -70,7 +72,7 @@ async def upload_file(file: UploadFile = File(...)):
 
     # TODO  1. Проверка допустимого размера файла
     # TODO  2. Сохранение файла с уникальныи именем
-    # TODO  3. Возврат ссылки на файл
+    # TODO  3. Возврат ссылки на файл (f'/images/{file.filename}')
     # TODO  4. Проверка уникальности имени и расширения
     # TODO  5. Реализовать ввиде функции?; выносить каждую функцию в отдельный файл ?
     # TODO  6. Реализовать кнопеку копирование 

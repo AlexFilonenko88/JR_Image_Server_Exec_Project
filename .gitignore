@@ -56,6 +56,15 @@ logs/
 
 # =========================
 
+# Folders
+
+# =========================
+
+image_uploads/*
+!image_uploads/.gitkeep
+
+# =========================
+
 # Testing / Coverage
 
 # =========================
@@ -102,10 +111,6 @@ dist/
 postgres_data/
 postgresql_data/
 pgdata/
-
-# =========================
-
-# Alembic
 
 # =========================
 

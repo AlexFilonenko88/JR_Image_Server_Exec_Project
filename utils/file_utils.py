@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-ALLOWED_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif']
+ALLOWED_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"]
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024
 
 
@@ -15,7 +15,7 @@ def is_allowed_file(filename: str) -> bool:
     return ext in ALLOWED_EXTENSIONS
 
 
-def get_unique_name(filename: Path) -> str:
+def get_unique_name(filename: str) -> str:
     pass
 
 

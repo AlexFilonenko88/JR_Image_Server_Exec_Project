@@ -60,8 +60,8 @@ logs/
 
 # =========================
 
-image_uploads/*
-!image_uploads/.gitkeep
+image_uploader/*
+!image_uploader/.gitkeep
 
 # =========================
 

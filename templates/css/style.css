@@ -38,7 +38,7 @@ body {
     font-size: 12px;
     background-color: rgb(0, 96, 255);
     color: rgb(255, 255, 255);
-    width: 160px;
+    /* width: 160px; */
     height: 40px;
     border: none;
     border-radius: 7px;
@@ -101,6 +101,7 @@ body {
     font-size: 20px;
     font-weight: bold;
     color: rgb(173, 192, 248); /* Неактивный цвет по умолчанию */
+    cursor: pointer;
 }
 
 .upload__tab--active {
@@ -129,6 +130,12 @@ body {
     width: 540px;
     height: 233px;
     text-align: center;
+}
+
+<!-- Дописал -->
+.upload__dropzone.is-dragover {
+    border-color: #517864;
+    background-color: rgba(81, 120, 100, 0.08);
 }
 
 .upload__icon {
@@ -213,8 +220,13 @@ body {
 
 }
 
+<!-- Дописал -->
+.upload__input-hidden {
+    display: none;
+}
+
 .upload__copy {
-    width: 60px;
+    width: 100px;
     height: 30px;
     border-radius: 12px;
     border: none;

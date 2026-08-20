@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ru">
 <head>
     <title>Сервер картинок</title>
@@ -6,4 +6,43 @@
 <body>
     <h1>Images</h1>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Умная загрузка</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <section class="upload__intro">
+        <h2 class="upload__title">Загрузить фото</h2>
+        <p class="upload__description">Загружайте сюда селфи, мемы или любые забавные картинки.</p>
+    </section>
+    <nav class="upload__tabs">
+        <!-- <button class="upload__tab" id="upload-tab-btn">Upload</button> -->
+        <!-- <button class="upload__tab " id="images-tab-btn">Images</button> -->
+        <a href="/upload" class="upload__tab " id="images-tab-btn">
+            Загрузите изображение
+        </a>
+        <a href="/images/" class="upload__tab " id="images-tab-btn">
+            Загруженные изображения
+        </a>
+    </nav>
+    <section id="file-list-wrapper">
+    </section>
+</body>
+<script src="../image-uploader/js/images.js"></script>
+
 </html>

@@ -1,6 +1,5 @@
 from pathlib import Path
 import asyncio
-import aiofiles
 from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,15 +10,15 @@ from utils.file_utils import is_allowed_file, save_uploaded_file, ALLOWED_EXTENS
 
 app = FastAPI()
 
+UPLOAD_DIR = Path('image_uploader')
+UPLOAD_DIR.mkdir(exist_ok=True)
+
 app.mount('/css', StaticFiles(directory='templates/css'), name='css')
 app.mount('/js', StaticFiles(directory='templates/js'), name='js')
 app.mount('/img', StaticFiles(directory='templates/img'), name='img')
 app.mount('/image_uploader', StaticFiles(directory='image_uploader'), name='image_uploader')
 
 templates = Jinja2Templates(directory='templates')
-
-UPLOAD_DIR = Path('image_uploader')
-UPLOAD_DIR.mkdir(exist_ok=True)
 
 
 @app.get('/', response_class=HTMLResponse)
@@ -72,8 +71,10 @@ async def upload_file(file: UploadFile = File(...)):
     # TODO  2. Сохранение файла с уникальныи именем
     # TODO  3. Возврат ссылки на файл (f'/images/{file.filename}')
     # TODO  4. Проверка уникальности имени и расширения
-    # TODO  5. Реализовать ввиде функции?; выносить каждую функцию в отдельный файл ?
-    # TODO  6. Реализовать кнопку копирование 
+    # TODO  5. Выносить каждую функцию в отдельный файл ?
+
+    if not UPLOAD_DIR.is_dir():
+        UPLOAD_DIR.mkdir(exist_ok=True)
 
     file_name = file.filename
 

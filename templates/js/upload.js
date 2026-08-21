@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileUpload = document.getElementById('file-upload');
     const currentUploadInput = document.querySelector('.upload__input');
 
-    <!-- TODO !!!!!!!!!!!!!!!!!!!!!!!! ДОБАВИТЬ РАСШИРЕНИЯ -->
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
     const MAX_SIZE_MB = 5;
     const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const validateFile = (file) => {
         if (!allowedTypes.includes(file.type)) {
-            alert('Неверный формат файла. Разрешены: .jpg, .jpeg, .png, .gif');
+            alert('Неверный формат файла. Разрешены: .jpg, .jpeg, .png, .gif, .webp');
             return false;
         }
         if (file.size > MAX_SIZE_BYTES) {

@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileUpload = document.getElementById('file-upload');
     const currentUploadInput = document.querySelector('.upload__input');
 
-    <!-- TODO !!!!!!!!!!!!!!!!!!!!!!!! ДОБАВИТЬ РАСШИРЕНИЯ -->
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
     const MAX_SIZE_MB = 5;
     const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
@@ -12,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     dropzone.addEventListener('click', () => {
         fileUpload.click();
     });
-
+    /*
     const validateFile = (file) => {
         if (!allowedTypes.includes(file.type)) {
-            alert('Неверный формат файла. Разрешены: .jpg, .jpeg, .png, .gif');
+            alert('Неверный формат файла. Разрешены: .jpg, .jpeg, .png, .gif, .webp');
             return false;
         }
         if (file.size > MAX_SIZE_BYTES) {
@@ -24,9 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return true;
     };
+    */
 
     const uploadFile = async (file) => {
-        if (!validateFile(file)) return;
+        /* if (!validateFile(file)) return; */
 
         const formData = new FormData();
         formData.append('file', file);
@@ -39,11 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            if (!response.ok) {
-                throw new Error(`Ошибка сервера: ${response.status}`);
-            }
-
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || `Ошибка сервера: ${response.status}`);
+            }
 
             if (currentUploadInput) {
                 currentUploadInput.value = data.url;
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Файл успешно загружен!');
         } catch (err) {
             console.error('Ошибка загрузки:', err);
-            alert('Не удалось загрузить файл. Попробуйте ещё раз.');
+            alert(err.message);
         } finally {
             dropzone.classList.remove('is-uploading');
         }

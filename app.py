@@ -1,12 +1,12 @@
 from pathlib import Path
 import asyncio
 import aiofiles
-from fastapi import FastAPI, Request, UploadFile, File
+from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
-from utils.file_utils import ALLOWED_EXTENSIONS
+from utils.file_utils import is_allowed_file, save_uploaded_file, ALLOWED_EXTENSIONS
 
 
 app = FastAPI()
@@ -32,8 +32,6 @@ async def index(request: Request):
         if file.is_file()
         and file.suffix.lower() in ALLOWED_EXTENSIONS
     ]
-
-    print(images)
 
     return templates.TemplateResponse(
         request=request,
@@ -75,13 +73,17 @@ async def upload_file(file: UploadFile = File(...)):
     # TODO  3. Возврат ссылки на файл (f'/images/{file.filename}')
     # TODO  4. Проверка уникальности имени и расширения
     # TODO  5. Реализовать ввиде функции?; выносить каждую функцию в отдельный файл ?
-    # TODO  6. Реализовать кнопеку копирование 
+    # TODO  6. Реализовать кнопку копирование 
 
-    file_path = UPLOAD_DIR / file.filename
+    file_name = file.filename
 
-    async with aiofiles.open(file_path, 'wb') as bf:
-        data = await file.read()
-        await bf.write(data)
+    if not is_allowed_file(file_name):
+        raise HTTPException(
+            status_code=400,
+            detail='Недопустимый формат файла. Разрешены: .png, .jpg, .jpeg, .webp, .gif'
+        )
+
+    await save_uploaded_file(file, file_name, UPLOAD_DIR)
 
     return {
         'url': f'/images/{file.filename}'

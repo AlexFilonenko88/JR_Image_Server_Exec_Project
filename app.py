@@ -33,8 +33,6 @@ async def index(request: Request):
         and file.suffix.lower() in ALLOWED_EXTENSIONS
     ]
 
-    print(images)
-
     return templates.TemplateResponse(
         request=request,
         name='index.html',

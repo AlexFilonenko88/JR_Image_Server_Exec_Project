@@ -8,11 +8,12 @@ MAX_UPLOAD_SIZE = 5 * 1024 * 1024
 def is_allowed_file(filename: str) -> bool:
     ''' Проверка, являеться файл допуститимым для загрузки '''
 
-    ext = filename.suffix.lower()
+    ext = Path(filename).suffix.lower()
 
-    print(ext)
-
-    return ext in ALLOWED_EXTENSIONS
+    if ext in ALLOWED_EXTENSIONS:
+        return True
+    else:
+        return False
 
 
 def get_unique_name(filename: str) -> str:

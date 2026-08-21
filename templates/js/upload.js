@@ -90,3 +90,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (file) uploadFile(file);
     });
 });
+
+// Для кнопки копировать
+
+document.querySelector('.upload__copy').addEventListener('click', async function () {
+    const input = document.querySelector('.upload__input');
+    const btn = this;
+
+    try {
+        await navigator.clipboard.writeText(input.value);
+    } catch (err) {
+        // fallback для старых браузеров / http без SSL
+        input.removeAttribute('readonly');
+        input.select();
+        document.execCommand('copy');
+        input.setAttribute('readonly', true);
+    }
+
+    const originalText = btn.textContent;
+    btn.textContent = 'СКОПИРОВАНО!';
+    btn.disabled = true;
+
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }, 1500);
+});

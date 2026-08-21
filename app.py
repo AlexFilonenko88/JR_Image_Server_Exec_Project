@@ -72,7 +72,6 @@ async def upload_file(file: UploadFile = File(...)):
     # TODO  3. Возврат ссылки на файл (f'/images/{file.filename}')
     # TODO  4. Проверка уникальности имени и расширения
     # TODO  5. Выносить каждую функцию в отдельный файл ?
-    # TODO  6. Реализовать кнопку копирование 
 
     if not UPLOAD_DIR.is_dir():
         UPLOAD_DIR.mkdir(exist_ok=True)

@@ -1,6 +1,5 @@
 from pathlib import Path
 import asyncio
-import aiofiles
 from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -25,6 +24,8 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
     ''' Главная страница сервиса. '''
+
+    # TODO 1. Если image_uploader не существует создать
 
     images = [
         file.name

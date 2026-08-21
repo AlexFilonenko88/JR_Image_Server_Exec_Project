@@ -78,8 +78,9 @@ async def upload_file(file: UploadFile = File(...)):
     file_path = UPLOAD_DIR / file.filename
 
     async with aiofiles.open(file_path, 'wb') as bf:
-        data = await file.read()
-        await bf.write(data)
+        while chunk := await file.read(1024*1024):
+            await bf.write(chunk)
+
 
     return {
         'url': f'/images/{file.filename}'

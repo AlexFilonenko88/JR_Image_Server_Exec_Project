@@ -39,11 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            if (!response.ok) {
-                throw new Error(`Ошибка сервера: ${response.status}`);
-            }
-
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || `Ошибка сервера: ${response.status}`);
+            }
 
             if (currentUploadInput) {
                 currentUploadInput.value = data.url;
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Файл успешно загружен!');
         } catch (err) {
             console.error('Ошибка загрузки:', err);
-            alert('Не удалось загрузить файл. Попробуйте ещё раз.');
+            alert(err.message);
         } finally {
             dropzone.classList.remove('is-uploading');
         }

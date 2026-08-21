@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dropzone.addEventListener('click', () => {
         fileUpload.click();
     });
-
+    /*
     const validateFile = (file) => {
         if (!allowedTypes.includes(file.type)) {
             alert('Неверный формат файла. Разрешены: .jpg, .jpeg, .png, .gif, .webp');
@@ -23,9 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return true;
     };
+    */
 
     const uploadFile = async (file) => {
-        if (!validateFile(file)) return;
+        /* if (!validateFile(file)) return; */
 
         const formData = new FormData();
         formData.append('file', file);

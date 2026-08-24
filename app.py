@@ -40,10 +40,14 @@ async def index(request: Request):
 async def images(request: Request):
     ''' Страница изображений сервиса. '''
 
+    images = get_list_uploaded_images(UPLOAD_DIR)
+    
     return templates.TemplateResponse(
         request=request,
         name='images.html',
-        context={}
+        context={
+            'images': images,
+        }
     )
 
 
@@ -64,10 +68,9 @@ async def upload_file(file: UploadFile = File(...)):
 
     # TODO  1. Проверка допустимого размера файла
     # TODO  2. Сохранение файла с уникальныи именем
-    # TODO  3. Возврат ссылки на файл (f'/images/{file.filename}')
     # TODO  4. Проверка уникальности имени и расширения
-    # TODO  5. Выносить каждую функцию в отдельный файл ?
     # TODO  5. "Прикрутить nginx", сначало как работает, зачем нужен ?
+    # TODO  6. Docker
 
     if not UPLOAD_DIR.is_dir():
         UPLOAD_DIR.mkdir(exist_ok=True)

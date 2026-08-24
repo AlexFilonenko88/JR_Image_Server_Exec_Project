@@ -14,11 +14,25 @@ def is_allowed_file(filename: str) -> bool:
     return ext in ALLOWED_EXTENSIONS
 
 
+def get_list_uploaded_images(UPLOAD_DIR):
+    ''' Получить список загруженных изображений '''
+
+    images = [
+            file.name
+            for file in UPLOAD_DIR.iterdir()
+            if file.is_file()
+            and file.suffix.lower() in ALLOWED_EXTENSIONS
+        ]
+
+    return images
+
 def get_unique_name(filename: str) -> str:
     pass
 
 
 async def save_uploaded_file(file, filename, UPLOAD_DIR):
+    ''' Сохранение загружаемых изображений '''
+
     file_path = UPLOAD_DIR / filename
     
     async with aiofiles.open(file_path, 'wb') as bf:

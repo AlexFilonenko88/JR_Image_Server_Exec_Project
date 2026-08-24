@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
-from utils.file_utils import is_allowed_file, save_uploaded_file, ALLOWED_EXTENSIONS
+from utils.file_utils import is_allowed_file, save_uploaded_file, get_list_uploaded_images, ALLOWED_EXTENSIONS
 
 
 app = FastAPI()
@@ -25,12 +25,7 @@ templates = Jinja2Templates(directory='templates')
 async def index(request: Request):
     ''' Главная страница сервиса. '''
 
-    images = [
-        file.name
-        for file in UPLOAD_DIR.iterdir()
-        if file.is_file()
-        and file.suffix.lower() in ALLOWED_EXTENSIONS
-    ]
+    images = get_list_uploaded_images(UPLOAD_DIR)
 
     return templates.TemplateResponse(
         request=request,
@@ -72,6 +67,7 @@ async def upload_file(file: UploadFile = File(...)):
     # TODO  3. Возврат ссылки на файл (f'/images/{file.filename}')
     # TODO  4. Проверка уникальности имени и расширения
     # TODO  5. Выносить каждую функцию в отдельный файл ?
+    # TODO  5. "Прикрутить nginx", сначало как работает, зачем нужен ?
 
     if not UPLOAD_DIR.is_dir():
         UPLOAD_DIR.mkdir(exist_ok=True)

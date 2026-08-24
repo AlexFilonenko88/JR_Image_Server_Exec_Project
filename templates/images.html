@@ -49,15 +49,18 @@
                 {{ image }}
                 </td>
                 <td class="link-cell">
-                    <input
-                        type="text"
-                        class="public-link-input"
-                        value="{{ url_for('image_uploader', path=image) }}"
-                        title="{{ url_for('image_uploader', path=image) }}"
-                        readonly
-                    >    
+                    <div class="upload__label">
+                        <input
+                            type="text"
+                            class="upload__input public-link-input"
+                            value="{{ request.app.url_path_for('image_uploader', path=image) }}"
+                            title="{{ request.app.url_path_for('image_uploader', path=image) }}"
+                            readonly
+                        >    
+                        <button class="upload__copy">КОПИРОВАТЬ</button>
+                    </div>
                     <a
-                        href="{{ url_for('image_uploader', path=image) }}"
+                        href="{{ request.app.url_path_for('image_uploader', path=image) }}"
                         class="copy-btn"
                         target="_blank"
                         rel="noopener"
@@ -71,6 +74,6 @@
         </table>
     </section>
 </body>
-<script src="../image-uploader/js/images.js"></script>
+<script src="../js/upload.js"></script>
 
 </html>

@@ -27,7 +27,48 @@
             Загруженные изображения
         </a>
     </nav>
-    <section id="file-list-wrapper">
+    <section id="file-list-wrapper" class="upload__form">
+        <table class="file-table">
+            <thead>
+            <tr>
+                <th>Превью</th>
+                <th>Имя файла</th>
+                <th>Публичная ссылка</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for image in images %}
+            <tr>
+                <td class="preview-cell">
+                <img
+                    src="{{ url_for('image_uploader', path=image) }}"
+                    alt="{{ image }}"
+                    class="preview-thumb">
+                </td>
+                <td class="filename-cell" title="{{ image }}">
+                {{ image }}
+                </td>
+                <td class="link-cell">
+                    <input
+                        type="text"
+                        class="public-link-input"
+                        value="{{ url_for('image_uploader', path=image) }}"
+                        title="{{ url_for('image_uploader', path=image) }}"
+                        readonly
+                    >    
+                    <a
+                        href="{{ url_for('image_uploader', path=image) }}"
+                        class="copy-btn"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        Открыть
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </section>
 </body>
 <script src="../image-uploader/js/images.js"></script>

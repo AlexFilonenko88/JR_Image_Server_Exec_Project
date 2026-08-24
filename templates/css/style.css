@@ -333,3 +333,91 @@ body {
     opacity: 0.7;
     /* Make the icon semi-transparent for user feedback */
 }
+
+/* Для страницы images */
+#file-list-wrapper {
+    padding: 16px 24px;
+    background: #f0f2fb;
+    margin: 0 auto; /* центрирует блок по горизонтали */
+    max-width: 800px;
+}
+
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: system-ui, sans-serif;
+}
+
+.file-table thead th {
+    text-align: left;
+    font-weight: 500;
+    color: #9aa0b4;
+    font-size: 14px;
+    padding: 12px 8px;
+    border-bottom: 1px solid #dde1f0;
+}
+
+.file-table tbody tr {
+    der-bottom: 1px solid #dde1f0;
+}
+
+.file-table tbody td {
+    padding: 12px 8px;
+    vertical-align: middle;
+}
+
+.preview-cell {
+    width: 64px;
+}
+
+.preview-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+.filename-cell {
+    color: #1c2333;
+    font-size: 15px;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.link-cell {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: black;
+}
+
+.public-link-input {
+    color: #8890a3;
+    font-size: 14px;
+    border: none;
+    background: transparent;
+    flex: 1;
+    min-width: 0;
+    outline: none;
+    cursor: text;
+}
+
+.copy-btn {
+    background: #fff;
+    border: 1px solid #3b5bfd;
+    color: #3b5bfd;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.copy-btn:hover {
+    background: #eef1ff;
+}

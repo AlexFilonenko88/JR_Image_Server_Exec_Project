@@ -339,7 +339,8 @@ body {
     padding: 16px 24px;
     background: #f0f2fb;
     margin: 0 auto; /* центрирует блок по горизонтали */
-    max-width: 800px;
+    width: 100%;
+    max-width: 1100px;
 }
 
 .file-table {
@@ -420,4 +421,29 @@ body {
 
 .copy-btn:hover {
     background: #eef1ff;
+}
+
+/* Новые стили */
+
+
+.file-table th:nth-child(1),
+.file-table td:nth-child(1) {
+    width: 80px;
+}
+
+.file-table th:nth-child(2),
+.file-table td:nth-child(2) {
+    width: 220px;
+}
+
+.file-table th:nth-child(3),
+.file-table td:nth-child(3) {
+    width: auto;
+}
+
+.filename-cell {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

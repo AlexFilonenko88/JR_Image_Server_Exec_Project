@@ -1,5 +1,6 @@
 from pathlib import Path
 import aiofiles
+import uuid 
 
 
 ALLOWED_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"]
@@ -26,9 +27,13 @@ def get_list_uploaded_images(UPLOAD_DIR):
 
     return images
 
-def get_unique_name(filename: str) -> str:
-    pass
 
+async def get_unique_name(filename: str) -> str:
+    ext = Path(filename).suffix.lower()
+    unique_name = f'{uuid.uuid4().hex}{ext}'
+
+    return unique_name
+    
 
 async def save_uploaded_file(file, filename, UPLOAD_DIR):
     ''' Сохранение загружаемых изображений '''
@@ -38,6 +43,7 @@ async def save_uploaded_file(file, filename, UPLOAD_DIR):
     async with aiofiles.open(file_path, 'wb') as bf:
         while chunk := await file.read(1024*1024):
             await bf.write(chunk)
+
 
 if __name__ == '__main__':
     print(is_allowed_file(Path('test.png')))

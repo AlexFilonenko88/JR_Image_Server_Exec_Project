@@ -5,7 +5,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
-from utils.file_utils import is_allowed_file, save_uploaded_file, get_list_uploaded_images, ALLOWED_EXTENSIONS
+from utils.file_utils import (
+    is_allowed_file, save_uploaded_file, 
+    get_list_uploaded_images, get_unique_name, 
+    ALLOWED_EXTENSIONS
+)
 
 
 app = FastAPI()
@@ -83,7 +87,9 @@ async def upload_file(file: UploadFile = File(...)):
             detail='Недопустимый формат файла. Разрешены: .png, .jpg, .jpeg, .webp, .gif'
         )
 
-    await save_uploaded_file(file, file_name, UPLOAD_DIR)
+    new_file_name = await get_unique_name(file_name)
+
+    await save_uploaded_file(file, new_file_name, UPLOAD_DIR)
 
     return {
         'url': f'/images/{file.filename}'

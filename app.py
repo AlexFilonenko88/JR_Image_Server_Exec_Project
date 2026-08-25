@@ -9,8 +9,9 @@ import uvicorn
 import logging
 import datetime
 from utils.file_utils import (
-    is_allowed_file, save_uploaded_file, 
-    get_list_uploaded_images, get_unique_name
+    is_allowed_expansion_file_name, save_uploaded_file, 
+    get_list_uploaded_images, get_unique_name,
+    check_size_uploaded_image
 )
 
 
@@ -92,9 +93,10 @@ async def upload(request: Request):
 async def upload_file(file: UploadFile = File(...)):
     ''' Страница загрузки изображений. POST '''
 
-    # TODO  1. Проверка допустимого размера файла
-    # TODO  5. "Прикрутить nginx", сначало как работает, зачем нужен ?
-    # TODO  6. Docker
+    # TODO  1. Исправить drag & drop
+    # TODO  2. Добавить кнопку удаления изображения с страницы images
+    # TODO  5. Docker
+    # TODO  6. "Прикрутить nginx", сначало как работает, зачем нужен ?
 
     if not UPLOAD_DIR.is_dir():
         logger.info(f'Папка "{UPLOAD_DIR}" не существует, создаем')
@@ -103,12 +105,20 @@ async def upload_file(file: UploadFile = File(...)):
     file_name = file.filename
     logger.info(f'Получаем имя файла: {file_name}')
 
-    if not is_allowed_file(file_name):
+    if not is_allowed_expansion_file_name(file_name):
         logger.error(f'Недопустимый формат файла: {file_name}')
         raise HTTPException(
             status_code=400,
             detail='Недопустимый формат файла. Разрешены: .png, .jpg, .jpeg, .webp, .gif'
         )
+
+    is_valid_size_uplod_file = await check_size_uploaded_image(file)
+
+    if not is_valid_size_uplod_file:
+        raise HTTPException(
+                    status_code=400,
+                    detail='Размер файла превышает допустимый размер 5Mб'
+                )
 
     new_file_name = await get_unique_name(file_name)
     logger.info(f'Получаем имя нового файла: {new_file_name}')

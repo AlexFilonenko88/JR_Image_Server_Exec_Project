@@ -10,7 +10,7 @@ ALLOWED_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"]
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024
 
 
-def is_allowed_file(filename: str) -> bool:
+def is_allowed_expansion_file_name(filename: str) -> bool:
     ''' Проверка, являеться файл допуститимым для загрузки '''
 
     ext = Path(filename).suffix.lower()
@@ -18,6 +18,19 @@ def is_allowed_file(filename: str) -> bool:
 
     return ext in ALLOWED_EXTENSIONS
 
+
+async def check_size_uploaded_image(file):
+    ''' Проверка размера загружаемого изображения '''
+
+    content = await file.read(MAX_UPLOAD_SIZE + 1)
+    await file.seek(0)
+
+    if len(content) > MAX_UPLOAD_SIZE:
+        logger.error(f'Размер файла превышает допустимый размер 5Мб. Ваш размер файла {MAX_UPLOAD_SIZE / 1024 / 1024}Мб')
+        
+        return False
+
+    return True
 
 def get_list_uploaded_images(UPLOAD_DIR):
     ''' Получить список загруженных изображений '''
@@ -48,9 +61,9 @@ async def save_uploaded_file(file, filename, UPLOAD_DIR):
     async with aiofiles.open(file_path, 'wb') as bf:
         while chunk := await file.read(1024*1024):
             await bf.write(chunk)
-            logger.info(f'Сохряняем изображение: {chunk}')
+
+    logger.info(f'Сохряняем изображение: {file_path}')
 
 
 if __name__ == '__main__':
-    print(is_allowed_file(Path('test.png')))
-    print(is_allowed_file(Path('test.mp4')))
+    pass

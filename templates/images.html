@@ -45,9 +45,10 @@
             <tr>
                 <td class="preview-cell">
                 <img
-                    src="{{ url_for('image_uploader', path=image) }}"
+                    src="/images/{{ image }}"
                     alt="{{ image }}"
-                    class="preview-thumb">
+                    class="preview-thumb"
+                >    
                 </td>
                 <td class="filename-cell" title="{{ image }}">
                 {{ image }}
@@ -57,14 +58,14 @@
                         <input
                             type="text"
                             class="upload__input public-link-input"
-                            value="{{ request.app.url_path_for('image_uploader', path=image) }}"
-                            title="{{ request.app.url_path_for('image_uploader', path=image) }}"
+                            value="{{ request.app.url_path_for('images', path=image) }}"
+                            title="{{ request.app.url_path_for('images', path=image) }}"
                             readonly
                         >    
                         <button class="upload__copy">КОПИРОВАТЬ</button>
                     </div>
                     <a
-                        href="{{ request.app.url_path_for('image_uploader', path=image) }}"
+                        href="{{ request.app.url_path_for('images', path=image) }}"
                         class="copy-btn"
                         target="_blank"
                         rel="noopener"

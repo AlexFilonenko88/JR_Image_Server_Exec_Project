@@ -35,13 +35,13 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-UPLOAD_DIR = Path('image_uploader')
+UPLOAD_DIR = Path('images')
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 app.mount('/css', StaticFiles(directory='templates/css'), name='css')
 app.mount('/js', StaticFiles(directory='templates/js'), name='js')
 app.mount('/img', StaticFiles(directory='templates/img'), name='img')
-app.mount('/image_uploader', StaticFiles(directory='image_uploader'), name='image_uploader')
+app.mount('/images', StaticFiles(directory='images'), name='images')
 
 templates = Jinja2Templates(directory='templates')
 
@@ -62,7 +62,7 @@ async def index(request: Request):
     )
 
 
-@app.get('/images/', response_class=HTMLResponse)
+@app.get('/images', response_class=HTMLResponse)
 async def images(request: Request):
     ''' Страница изображений сервиса. '''
 
@@ -126,7 +126,7 @@ async def upload_file(file: UploadFile = File(...)):
     await save_uploaded_file(file, new_file_name, UPLOAD_DIR)
 
     return {
-        'url': f'/images/{file.filename}'
+        'url': f'/images/{new_file_name}'
     }
 
 

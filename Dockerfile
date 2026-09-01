@@ -1,9 +1,11 @@
 FROM python:3.14-slim
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libjpeg-dev
-    # pip install --upgrade pip && \  
-    # pip install -r requirements.txt
+    apt-get install -y --no-install-recommends \
+        gcc \
+        libjpeg-dev && \
+    rm -rf /var/lib/apt/lists/*    
+    
 
 WORKDIR /app
 

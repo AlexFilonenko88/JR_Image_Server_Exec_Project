@@ -95,8 +95,6 @@ async def upload_file(file: UploadFile = File(...)):
 
     # TODO  1. Исправить drag & drop
     # TODO  2. Добавить кнопку удаления изображения с страницы images
-    # TODO  5. Docker
-    # TODO  6. "Прикрутить nginx", сначало как работает, зачем нужен ?
 
     if not UPLOAD_DIR.is_dir():
         logger.info(f'Папка "{UPLOAD_DIR}" не существует, создаем')

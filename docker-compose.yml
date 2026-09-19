@@ -8,8 +8,10 @@ services:
       - ./images:/app/images
       - ./logs:/app/logs
 
-    expose:
-      - "8000"
+    ports:
+          - "127.0.0.1:8080:8000"
+    # expose:
+    #   - "8000"
 
     environment:
       - PYTHONUNBUFFERED=1

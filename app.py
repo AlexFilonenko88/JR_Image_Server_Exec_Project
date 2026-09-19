@@ -100,6 +100,11 @@ async def upload_file(file: UploadFile = File(...)):
         UPLOAD_DIR.mkdir(exist_ok=True)
 
     file_name = file.filename
+    if file_name is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Имя файла не указано",
+        )
     logger.info(f"Получаем имя файла: {file_name}")
 
     if not is_allowed_expansion_file_name(file_name):

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropzone.addEventListener('click', () => {
             fileUpload.click();
         });
-        
+
         /*
         const validateFile = (file) => {
             if (!allowedTypes.includes(file.type)) {
@@ -122,4 +122,30 @@ document.addEventListener('click', async (event) => {
         btn.textContent = originalText;
         btn.disabled = false;
     }, 1500);
+});
+
+// Для кнопки удалить — делегирование, работает даже если строки таблицы
+// появятся динамически после загрузки скрипта
+document.addEventListener('click', async (event) => {
+    const btn = event.target.closest('.upload__delete');
+    if (!btn) return;
+
+    const filename = btn.dataset.filename;
+
+    if (!confirm(`Удалить файл "${filename}"?`)) return;
+
+    try {
+        const response = await fetch(`/delete/${encodeURIComponent(filename)}`, {
+            method: 'POST',
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка удаления');
+        }
+
+        btn.closest('tr').remove();
+    } catch (err) {
+        alert('Не удалось удалить файл');
+        console.error(err);
+    }
 });

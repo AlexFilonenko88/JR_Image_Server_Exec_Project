@@ -447,3 +447,21 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.upload__delete {
+    background: #fff;
+    border: 1px solid #3b5bfd;
+    color: #3b5bfd;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.upload__delete:hover {
+    background: #eef1ff;
+}

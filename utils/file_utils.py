@@ -67,5 +67,19 @@ async def save_uploaded_file(file, filename, UPLOAD_DIR):
     logger.info(f"Сохряняем изображение: {file_path}")
 
 
+async def delete_uploaded_file(filename: str, UPLOAD_DIR: Path) -> bool:
+    safe_name = Path(filename).name  # отбрасывает любые ../ и подпапки
+    file_path = UPLOAD_DIR / safe_name
+
+    if not file_path.exists() or not file_path.is_file():
+        logger.warning(f"Файл для удаления не найден: {file_path}")
+        return False
+
+    file_path.unlink()
+    logger.info(f"Удалили изображение: {file_path}")
+
+    return True
+
+
 if __name__ == "__main__":
     pass

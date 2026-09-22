@@ -48,7 +48,7 @@
                     src="/images/{{ image }}"
                     alt="{{ image }}"
                     class="preview-thumb"
-                >    
+                >
                 </td>
                 <td class="filename-cell" title="{{ image }}">
                 {{ image }}
@@ -61,7 +61,7 @@
                             value="{{ request.app.url_path_for('images', path=image) }}"
                             title="{{ request.app.url_path_for('images', path=image) }}"
                             readonly
-                        >    
+                        >
                         <button class="upload__copy">КОПИРОВАТЬ</button>
                     </div>
                     <a
@@ -72,6 +72,14 @@
                     >
                         Открыть
                     </a>
+                </td>
+                <td class="action-cell">
+                    <button
+                        class="upload__delete"
+                        data-filename="{{ image }}"
+                    >
+                        УДАЛИТЬ
+                    </button>
                 </td>
             </tr>
             {% endfor %}

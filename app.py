@@ -12,6 +12,7 @@ from fastapi.templating import Jinja2Templates
 
 from utils.file_utils import (
     check_size_uploaded_image,
+    delete_uploaded_file,
     get_list_uploaded_images,
     get_unique_name,
     is_allowed_expansion_file_name,
@@ -127,6 +128,20 @@ async def upload_file(file: UploadFile = File(...)):
     await save_uploaded_file(file, new_file_name, UPLOAD_DIR)
 
     return {"url": f"/images/{new_file_name}"}
+
+
+@app.post("/delete/{filename}")
+async def delete_image(filename: str):
+    """Удаление загруженного изображения."""
+
+    deleted = await delete_uploaded_file(filename, UPLOAD_DIR)
+
+    if not deleted:
+        logger.error(f"Файл для удаления не найден: {filename}")
+        raise HTTPException(status_code=404, detail="Файл не найден")
+
+    logger.info(f"Файл удалён: {filename}")
+    return {"status": "ok", "filename": filename}
 
 
 if __name__ == "__main__":

@@ -3,3 +3,4 @@ _old/
 images/
 logs/
 .venv/
+.env

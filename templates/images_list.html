@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -24,10 +24,10 @@
         <p class="upload__description">Загружайте сюда селфи, мемы или любые забавные картинки.</p>
     </section>
     <nav class="upload__tabs">
-        <a href="/upload" class="upload__tab " id="images-tab-btn">
+        <a href="/upload" class="upload__tab" id="images-tab-btn">
             Загрузите изображение
         </a>
-        <a href="/images/" class="upload__tab " id="images-tab-btn">
+        <a href="/images_list/" class="upload__tab" id="images-tab-btn">
             Загруженные изображения
         </a>
     </nav>
@@ -58,14 +58,14 @@
                         <input
                             type="text"
                             class="upload__input public-link-input"
-                            value="{{ request.app.url_path_for('images', path=image) }}"
-                            title="{{ request.app.url_path_for('images', path=image) }}"
+                            value="{{ request.app.url_path_for('images_static', path=image) }}"
+                            title="{{ request.app.url_path_for('images_static', path=image) }}"
                             readonly
                         >
                         <button class="upload__copy">КОПИРОВАТЬ</button>
                     </div>
                     <a
-                        href="{{ request.app.url_path_for('images', path=image) }}"
+                        href="{{ request.app.url_path_for('images_static', path=image) }}"
                         class="copy-btn"
                         target="_blank"
                         rel="noopener"
@@ -86,7 +86,6 @@
             </tbody>
         </table>
     </section>
+    <script src="../js/upload.js"></script>
 </body>
-<script src="../js/upload.js"></script>
-
 </html>

@@ -61,7 +61,7 @@ logs/
 
 # =========================
 
-image_uploader/*
+images/*
 !image_uploader/.gitkeep
 
 # =========================

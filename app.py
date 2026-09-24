@@ -2,6 +2,7 @@ import asyncio
 import datetime
 import logging
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
@@ -10,6 +11,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from utils.db_utils import create_table, test_connection
 from utils.file_utils import (
     check_size_uploaded_image,
     delete_uploaded_file,
@@ -37,7 +39,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    test_connection()
+    create_table()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 UPLOAD_DIR = Path("images")
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -45,7 +54,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 app.mount("/css", StaticFiles(directory="templates/css"), name="css")
 app.mount("/js", StaticFiles(directory="templates/js"), name="js")
 app.mount("/img", StaticFiles(directory="templates/img"), name="img")
-app.mount("/images", StaticFiles(directory="images"), name="images")
+app.mount("/images", StaticFiles(directory="images"), name="images_static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -66,7 +75,7 @@ async def index(request: Request):
     )
 
 
-@app.get("/images", response_class=HTMLResponse)
+@app.get("/images_list", response_class=HTMLResponse)
 async def images(request: Request):
     """Страница изображений сервиса."""
 
@@ -75,7 +84,7 @@ async def images(request: Request):
 
     return templates.TemplateResponse(
         request=request,
-        name="images.html",
+        name="images_list.html",
         context={
             "images": images,
         },
@@ -92,9 +101,6 @@ async def upload(request: Request):
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
     """Страница загрузки изображений. POST"""
-
-    # TODO  1. Исправить drag & drop
-    # TODO  2. Добавить кнопку удаления изображения с страницы images
 
     if not UPLOAD_DIR.is_dir():
         logger.info(f'Папка "{UPLOAD_DIR}" не существует, создаем')

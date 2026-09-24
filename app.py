@@ -45,7 +45,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 app.mount("/css", StaticFiles(directory="templates/css"), name="css")
 app.mount("/js", StaticFiles(directory="templates/js"), name="js")
 app.mount("/img", StaticFiles(directory="templates/img"), name="img")
-app.mount("/images", StaticFiles(directory="images"), name="images")
+app.mount("/images", StaticFiles(directory="images"), name="images_static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -66,7 +66,7 @@ async def index(request: Request):
     )
 
 
-@app.get("/images", response_class=HTMLResponse)
+@app.get("/images_list", response_class=HTMLResponse)
 async def images(request: Request):
     """Страница изображений сервиса."""
 
@@ -75,7 +75,7 @@ async def images(request: Request):
 
     return templates.TemplateResponse(
         request=request,
-        name="images.html",
+        name="images_list.html",
         context={
             "images": images,
         },
@@ -92,9 +92,6 @@ async def upload(request: Request):
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
     """Страница загрузки изображений. POST"""
-
-    # TODO  1. Исправить drag & drop
-    # TODO  2. Добавить кнопку удаления изображения с страницы images
 
     if not UPLOAD_DIR.is_dir():
         logger.info(f'Папка "{UPLOAD_DIR}" не существует, создаем')

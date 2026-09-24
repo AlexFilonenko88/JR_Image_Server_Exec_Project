@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -30,15 +30,14 @@
         <div class="hero">
             {% for image in images %}
                 <div class="hero__img">
-                    <img 
-                    class="img" 
-                    src="{{ url_for('images', path=image) }}" 
+                    <img
+                    class="img"
+                    src="{{ url_for('images_static', path=image) }}"
                     alt="{{ image }}">
                 </div>
             {% endfor %}
         </div>
     </main>
+    <script src="./js/index.js"></script>
 </body>
-<script src="./js/index.js"></script>
-
 </html>

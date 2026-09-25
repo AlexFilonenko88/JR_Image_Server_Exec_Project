@@ -9,7 +9,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def get_connection() -> psycopg2.extensions.connection:
+def get_connection_db() -> psycopg2.extensions.connection:
     """Создаёт и возвращает соединение с базой данных"""
 
     return psycopg2.connect(
@@ -21,12 +21,12 @@ def get_connection() -> psycopg2.extensions.connection:
     )
 
 
-def test_connection() -> None:
+def test_connection_db() -> None:
     """Тест подключения к базе данных"""
 
     conn = None
     try:
-        conn = get_connection()
+        conn = get_connection_db()
         logger.info("Соединение с базой данных успешно установленно")
     except Exception as e:
         logger.info(f"Ошибка подключения: {e}")
@@ -36,7 +36,7 @@ def test_connection() -> None:
             conn.close()
 
 
-def create_table() -> None:
+def create_table_db() -> None:
     """Создание таблицы images_server"""
 
     query = """
@@ -52,7 +52,7 @@ def create_table() -> None:
 
     conn = None
     try:
-        conn = get_connection()
+        conn = get_connection_db()
         cur = conn.cursor()
         cur.execute(query)
         conn.commit()
@@ -68,7 +68,9 @@ def create_table() -> None:
             conn.close()
 
 
-def insert_image(filename: str, original_name: str, size: int, file_type: str) -> None:
+def insert_image_db(
+    filename: str, original_name: str, size: int, file_type: str
+) -> None:
     """Добавление данных в таблицу images_server"""
 
     query = """
@@ -83,7 +85,7 @@ def insert_image(filename: str, original_name: str, size: int, file_type: str) -
 
     conn = None
     try:
-        conn = get_connection()
+        conn = get_connection_db()
         cur = conn.cursor()
         cur.execute(query, (filename, original_name, size, file_type))
         conn.commit()
@@ -99,7 +101,7 @@ def insert_image(filename: str, original_name: str, size: int, file_type: str) -
             conn.close()
 
 
-def delete_image(filename: str) -> None:
+def delete_image_db(filename: str) -> None:
     """Удаление данных из таблицы images_server"""
 
     pass
@@ -107,5 +109,5 @@ def delete_image(filename: str) -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    test_connection()
-    create_table()
+    test_connection_db()
+    create_table_db()

@@ -11,7 +11,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from utils.db_utils import create_table, insert_image, test_connection
+from utils.db_utils import create_table_db, insert_image_db, test_connection_db
 from utils.file_utils import (
     check_size_uploaded_image,
     delete_uploaded_file,
@@ -43,8 +43,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    test_connection()
-    create_table()
+    test_connection_db()
+    create_table_db()
     yield
 
 
@@ -141,7 +141,9 @@ async def upload_file(file: UploadFile = File(...)):
     file_ext = Path(new_file_name).suffix.lower()
 
     logger.info(f"Добавляем новый файл: {new_file_name} в базу данных")
-    await asyncio.to_thread(insert_image, new_file_name, file_name, file_size, file_ext)
+    await asyncio.to_thread(
+        insert_image_db, new_file_name, file_name, file_size, file_ext
+    )
 
     return {"url": f"/images/{new_file_name}"}
 

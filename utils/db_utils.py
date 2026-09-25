@@ -9,7 +9,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def get_connection():
+def get_connection() -> psycopg2.extensions.connection:
     """Создаёт и возвращает соединение с базой данных"""
 
     return psycopg2.connect(
@@ -21,7 +21,7 @@ def get_connection():
     )
 
 
-def test_connection():
+def test_connection() -> None:
     """Тест подключения к базе данных"""
 
     conn = None
@@ -36,7 +36,7 @@ def test_connection():
             conn.close()
 
 
-def create_table():
+def create_table() -> None:
     """Создание таблицы images_server"""
 
     query = """
@@ -59,14 +59,16 @@ def create_table():
         cur.close()
         logger.info("Таблица images_server создана (или уже существует)")
     except Exception as e:
-        logger.info(f"Ошибка создания таблицы: {e}")
+        logger.info(f"Ошибка создания таблицы images_server: {e}")
     finally:
         if conn:
-            logger.info("После создания таблицы соединение с базой данных закрыто")
+            logger.info(
+                "После создания таблицы images_server, соединение с базой данных закрыто"
+            )
             conn.close()
 
 
-def insert_data(filename: str, original_name: str, size: int, file_type: str):
+def insert_image(filename: str, original_name: str, size: int, file_type: str) -> None:
     """Добавление данных в таблицу images_server"""
 
     query = """
@@ -91,8 +93,16 @@ def insert_data(filename: str, original_name: str, size: int, file_type: str):
         logger.info(f"Ошибка добавления данных в таблицу images_server: {e}")
     finally:
         if conn:
-            logger.info("После добавления данных соединение с базой данных закрыто")
+            logger.info(
+                "После добавления данных в таблицу images_server, соединение с базой данных закрыто"
+            )
             conn.close()
+
+
+def delete_image(filename: str) -> None:
+    """Удаление данных из таблицы images_server"""
+
+    pass
 
 
 if __name__ == "__main__":

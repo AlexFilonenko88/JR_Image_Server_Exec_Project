@@ -20,6 +20,7 @@ from utils.file_utils import (
     is_allowed_expansion_file_name,
     save_uploaded_file,
 )
+from utils.gap_separator_file_handler import GapSeparatorFileHandler
 
 logs_dir = Path("logs")
 logs_dir.mkdir(exist_ok=True)
@@ -30,7 +31,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(log_file, encoding="utf-8"),
+        # logging.FileHandler(log_file, encoding="utf-8"),
+        GapSeparatorFileHandler(log_file, encoding="utf-8", gap_seconds=300),
         logging.StreamHandler(),
     ],
     force=True,

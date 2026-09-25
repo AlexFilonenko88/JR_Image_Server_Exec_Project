@@ -27,7 +27,7 @@ def test_connection():
     conn = None
     try:
         conn = get_connection()
-        logger.info("Соединение с базой данных успешно")
+        logger.info("Соединение с базой данных успешно установленно")
     except Exception as e:
         logger.info(f"Ошибка подключения: {e}")
     finally:
@@ -62,6 +62,36 @@ def create_table():
         logger.info(f"Ошибка создания таблицы: {e}")
     finally:
         if conn:
+            logger.info("После создания таблицы соединение с базой данных закрыто")
+            conn.close()
+
+
+def insert_data(filename: str, original_name: str, size: int, file_type: str):
+    """Добавление данных в таблицу images_server"""
+
+    query = """
+        INSERT INTO images_server (
+            filename,
+            original_name,
+            size,
+            file_type
+        )
+        VALUES (%s, %s, %s, %s);
+    """
+
+    conn = None
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute(query, (filename, original_name, size, file_type))
+        conn.commit()
+        cur.close()
+        logger.info("Данные добавлены в таблицу images_server")
+    except Exception as e:
+        logger.info(f"Ошибка добавления данных в таблицу images_server: {e}")
+    finally:
+        if conn:
+            logger.info("После добавления данных соединение с базой данных закрыто")
             conn.close()
 
 

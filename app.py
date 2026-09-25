@@ -11,7 +11,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from utils.db_utils import create_table, test_connection
+from utils.db_utils import create_table, insert_data, test_connection
 from utils.file_utils import (
     check_size_uploaded_image,
     delete_uploaded_file,
@@ -63,7 +63,7 @@ templates = Jinja2Templates(directory="templates")
 async def index(request: Request):
     """Главная страница сервиса."""
 
-    images = get_list_uploaded_images(UPLOAD_DIR)
+    images = await get_list_uploaded_images(UPLOAD_DIR)
     logger.info(f'Получен список изображений: {images}, для "/"')
 
     return templates.TemplateResponse(
@@ -79,7 +79,7 @@ async def index(request: Request):
 async def images(request: Request):
     """Страница изображений сервиса."""
 
-    images = get_list_uploaded_images(UPLOAD_DIR)
+    images = await get_list_uploaded_images(UPLOAD_DIR)
     logger.info(f'Получен список изображений: {images}, для "images"')
 
     return templates.TemplateResponse(
@@ -132,6 +132,14 @@ async def upload_file(file: UploadFile = File(...)):
     logger.info(f"Получаем имя нового файла: {new_file_name}")
 
     await save_uploaded_file(file, new_file_name, UPLOAD_DIR)
+
+    file_size = await asyncio.to_thread(
+        lambda: (UPLOAD_DIR / new_file_name).stat().st_size
+    )
+    file_ext = Path(new_file_name).suffix.lower()
+
+    logger.info(f"Добавляем новый файл: {new_file_name} в базу данных")
+    await asyncio.to_thread(insert_data, new_file_name, file_name, file_size, file_ext)
 
     return {"url": f"/images/{new_file_name}"}
 

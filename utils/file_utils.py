@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import uuid
 from pathlib import Path
@@ -35,19 +36,24 @@ async def check_size_uploaded_image(file):
     return True
 
 
-def get_list_uploaded_images(UPLOAD_DIR):
+async def get_list_uploaded_images(UPLOAD_DIR):
     """Получить список загруженных изображений"""
 
-    images = [
-        file.name
-        for file in UPLOAD_DIR.iterdir()
-        if file.is_file() and file.suffix.lower() in ALLOWED_EXTENSIONS
-    ]
-    logger.info(f"Получаем список изображений: {images}")
-    return images
+    def _list():
+        return [
+            file.name
+            for file in UPLOAD_DIR.iterdir()
+            if file.is_file() and file.suffix.lower() in ALLOWED_EXTENSIONS
+        ]
+
+    logger.info("Получаем список изображений")
+
+    return await asyncio.to_thread(_list)
 
 
 async def get_unique_name(filename: str) -> str:
+    """Получение уникального имени файла"""
+
     ext = Path(filename).suffix.lower()
     unique_name = f"{uuid.uuid4().hex}{ext}"
     logger.info(f"Получаем униальное имя изображения: {unique_name}")
@@ -68,17 +74,21 @@ async def save_uploaded_file(file, filename, UPLOAD_DIR):
 
 
 async def delete_uploaded_file(filename: str, UPLOAD_DIR: Path) -> bool:
-    safe_name = Path(filename).name  # отбрасывает любые ../ и подпапки
+    """Удаление загруженного изображения"""
+
+    safe_name = Path(filename).name
     file_path = UPLOAD_DIR / safe_name
 
-    if not file_path.exists() or not file_path.is_file():
-        logger.warning(f"Файл для удаления не найден: {file_path}")
-        return False
+    def _delete():
+        if not file_path.exists() or not file_path.is_file():
+            logger.warning(f"Файл для удаления не найден: {file_path}")
+            return False
 
-    file_path.unlink()
-    logger.info(f"Удалили изображение: {file_path}")
+        file_path.unlink()
+        logger.info(f"Удалили изображение: {file_path}")
+        return True
 
-    return True
+    return await asyncio.to_thread(_delete)
 
 
 if __name__ == "__main__":

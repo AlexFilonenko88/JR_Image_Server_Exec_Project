@@ -63,7 +63,7 @@ templates = Jinja2Templates(directory="templates")
 async def index(request: Request):
     """Главная страница сервиса."""
 
-    images = get_list_uploaded_images(UPLOAD_DIR)
+    images = await get_list_uploaded_images(UPLOAD_DIR)
     logger.info(f'Получен список изображений: {images}, для "/"')
 
     return templates.TemplateResponse(

@@ -11,7 +11,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from utils.db_utils import create_table, insert_data, test_connection
+from utils.db_utils import (
+    create_table_db,
+    delete_image_db,
+    insert_image_db,
+    test_connection_db,
+)
 from utils.file_utils import (
     check_size_uploaded_image,
     delete_uploaded_file,
@@ -20,6 +25,7 @@ from utils.file_utils import (
     is_allowed_expansion_file_name,
     save_uploaded_file,
 )
+from utils.gap_separator_file_handler import GapSeparatorFileHandler
 
 logs_dir = Path("logs")
 logs_dir.mkdir(exist_ok=True)
@@ -30,7 +36,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(log_file, encoding="utf-8"),
+        # logging.FileHandler(log_file, encoding="utf-8"),
+        GapSeparatorFileHandler(log_file, encoding="utf-8", gap_seconds=300),
         logging.StreamHandler(),
     ],
     force=True,
@@ -41,8 +48,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    test_connection()
-    create_table()
+    await test_connection_db()
+    await create_table_db()
     yield
 
 
@@ -139,7 +146,7 @@ async def upload_file(file: UploadFile = File(...)):
     file_ext = Path(new_file_name).suffix.lower()
 
     logger.info(f"Добавляем новый файл: {new_file_name} в базу данных")
-    await asyncio.to_thread(insert_data, new_file_name, file_name, file_size, file_ext)
+    await insert_image_db(new_file_name, file_name, file_size, file_ext)
 
     return {"url": f"/images/{new_file_name}"}
 
@@ -148,13 +155,16 @@ async def upload_file(file: UploadFile = File(...)):
 async def delete_image(filename: str):
     """Удаление загруженного изображения."""
 
+    logger.info(f"Файл удалён: {filename} c диска")
     deleted = await delete_uploaded_file(filename, UPLOAD_DIR)
 
     if not deleted:
         logger.error(f"Файл для удаления не найден: {filename}")
         raise HTTPException(status_code=404, detail="Файл не найден")
 
-    logger.info(f"Файл удалён: {filename}")
+    logger.info(f"Файл удалён: {filename} из базы данных")
+    await delete_image_db(filename)
+
     return {"status": "ok", "filename": filename}
 
 

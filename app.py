@@ -11,7 +11,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from utils.db_utils import create_table_db, insert_image_db, test_connection_db
+from utils.db_utils import (
+    create_table_db,
+    delete_image_db,
+    insert_image_db,
+    test_connection_db,
+)
 from utils.file_utils import (
     check_size_uploaded_image,
     delete_uploaded_file,
@@ -43,8 +48,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    test_connection_db()
-    create_table_db()
+    await test_connection_db()
+    await create_table_db()
     yield
 
 
@@ -141,9 +146,7 @@ async def upload_file(file: UploadFile = File(...)):
     file_ext = Path(new_file_name).suffix.lower()
 
     logger.info(f"Добавляем новый файл: {new_file_name} в базу данных")
-    await asyncio.to_thread(
-        insert_image_db, new_file_name, file_name, file_size, file_ext
-    )
+    await insert_image_db(new_file_name, file_name, file_size, file_ext)
 
     return {"url": f"/images/{new_file_name}"}
 
@@ -152,13 +155,16 @@ async def upload_file(file: UploadFile = File(...)):
 async def delete_image(filename: str):
     """Удаление загруженного изображения."""
 
+    logger.info(f"Файл удалён: {filename} c диска")
     deleted = await delete_uploaded_file(filename, UPLOAD_DIR)
 
     if not deleted:
         logger.error(f"Файл для удаления не найден: {filename}")
         raise HTTPException(status_code=404, detail="Файл не найден")
 
-    logger.info(f"Файл удалён: {filename}")
+    logger.info(f"Файл удалён: {filename} из базы данных")
+    await delete_image_db(filename)
+
     return {"status": "ok", "filename": filename}
 
 

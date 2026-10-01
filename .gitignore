@@ -63,6 +63,7 @@ logs/
 
 images/*
 !image_uploader/.gitkeep
+/backups/
 
 # =========================
 

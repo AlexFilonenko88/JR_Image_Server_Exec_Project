@@ -29,6 +29,8 @@ logger = logging.getLogger(__name__)
 
 
 def restore_backup(backup_file: str) -> None:
+    """Восстанавливает базу данных PostgreSQL из бэкапа."""
+
     path = Path(backup_file)
 
     if not path.exists():

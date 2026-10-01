@@ -6,9 +6,6 @@ from datetime import datetime
 
 class GapSeparatorFileHandler(logging.FileHandler):
     """
-    FileHandler, добавляет пустую строку-разделитель,
-    если между записями прошло больше gap_seconds.
-
     Добавляет пустую строку перед записью, если:
 
     - между логами прошло больше gap_seconds;

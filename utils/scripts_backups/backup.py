@@ -31,6 +31,8 @@ logger = logging.getLogger(__name__)
 
 
 def create_backup() -> None:
+    """Создает бэкап базы данных PostgreSQL."""
+
     BACKUP_DIR.mkdir(exist_ok=True)
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")

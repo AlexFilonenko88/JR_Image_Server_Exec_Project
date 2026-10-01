@@ -78,3 +78,91 @@ python app.py
 ## Известные ограничения / TODO
 
 - Не работает drag & drop на странице в Yandex браузере
+
+
+
+### Резервное копирование базы данных
+
+Для резервного копирования используется PostgreSQL `pg_dump`, запущенный внутри Docker-контейнера `postgres`.
+
+### Создание резервной копии вручную
+
+Запустить:
+
+```bash
+python utils/scripts_backups/backup.py
+```
+Альтернативная команда:
+```bash
+python3 -m utils.scripts_backups.backup  
+```
+
+Резервная копия сохраняется в директорию:
+
+```text
+backups/
+```
+
+Имя файла содержит дату и время создания:
+
+```text
+backup_2026-10-01_100530.sql
+```
+
+Также backup можно создать непосредственно командой:
+
+```bash
+docker compose exec -T postgres \
+    pg_dump -U postgres images_db \
+    > backups/backup_$(date +%Y-%m-%d_%H%M%S).sql
+```
+
+### Восстановление базы данных
+
+Для восстановления используется файл резервной копии:
+
+```bash
+docker compose exec -T postgres \
+    psql -U postgres images_db \
+    < backups/backup_2026-10-01_100530.sql
+```
+
+Или:
+
+```bash
+python utils/scripts_backups/restore.py backups/backup_2026-10-01_100530.sql
+```
+Альтернативная команда:
+```bash
+python3 -m utils.scripts_backups.restore backups/backup_2026-10-01_111901.sql 
+```
+
+### Автоматическое резервное копирование
+
+Для автоматического создания резервных копий используется `cron`.
+
+Пример запуска backup каждый день в 03:00:
+
+```cron
+0 3 * * * cd /home/alex/Projects/Exam_projects/Image_Server_Exec_Project && /usr/bin/python3 scripts/backup.py >> logs/backup.log 2>&1
+```
+
+Все созданные резервные копии хранятся в директории:
+
+```text
+/backups
+```
+
+### Проверка резервных копий
+
+Список созданных резервных копий:
+
+```bash
+ls -lh backups/
+```
+
+Проверить содержимое SQL-файла:
+    print(f"База данных восстановлена из: {path}")
+```bash
+head -n 20 backups/backup_2026-10-01_100530.sql
+```

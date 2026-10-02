@@ -18,7 +18,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        # logging.FileHandler(log_file, encoding="utf-8"),
         GapSeparatorFileHandler(log_file, encoding="utf-8", gap_seconds=300),
         logging.StreamHandler(),
     ],
@@ -35,7 +34,6 @@ def restore_backup(backup_file: str) -> None:
 
     if not path.exists():
         logger.info(f"Файл бэкапа не найден: {path}")
-        print(f"Файл бэкапа не найден: {path}")
         sys.exit(1)
 
     postgres_user = os.getenv("POSTGRES_USER")
@@ -52,20 +50,25 @@ def restore_backup(backup_file: str) -> None:
         postgres_user,
         postgres_db,
     ]
+    try:
+        with path.open("r", encoding="utf-8") as file:
+            subprocess.run(
+                command,
+                stdin=file,
+                check=True,
+            )
+        logger.info(f"База данных восстановлена из: {path}")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Ошибка при восстановлении бэкапа: {e}")
 
-    with path.open("r", encoding="utf-8") as file:
-        subprocess.run(
-            command,
-            stdin=file,
-            check=True,
-        )
-
-    logger.info(f"База данных восстановлена из: {path}")
+    logger.info(f"Бэкап восстановлен из: {backup_file}")
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Использование: python scripts/restore.py <backup_file>")
+        print(
+            "Укажите путь к файлу бэкапа. Пример: python scripts_backups/restore.py backups/backup.sql"
+        )
         sys.exit(1)
 
     restore_backup(sys.argv[1])

@@ -20,7 +20,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        # logging.FileHandler(log_file, encoding="utf-8"),
         GapSeparatorFileHandler(log_file, encoding="utf-8", gap_seconds=300),
         logging.StreamHandler(),
     ],
@@ -53,14 +52,16 @@ def create_backup() -> None:
         postgres_db,
     ]
 
-    with backup_file.open("w", encoding="utf-8") as file:
-        subprocess.run(
-            command,
-            stdout=file,
-            check=True,
-        )
-
-    logger.info(f"Бэкап создан: {backup_file}")
+    try:
+        with backup_file.open("w", encoding="utf-8") as file:
+            subprocess.run(
+                command,
+                stdout=file,
+                check=True,
+            )
+        logger.info(f"Бэкап создан: {backup_file}")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Ошибка при создании бэкапа: {e}")
 
 
 if __name__ == "__main__":

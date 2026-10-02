@@ -4,3 +4,4 @@ images/
 logs/
 .venv/
 .env
+/backups/

@@ -13,20 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fileUpload.click();
         });
 
-        /*
-        const validateFile = (file) => {
-            if (!allowedTypes.includes(file.type)) {
-                alert('Неверный формат файла. Разрешены: .jpg, .jpeg, .png, .gif, .webp');
-                return false;
-            }
-            if (file.size > MAX_SIZE_BYTES) {
-                alert(`Файл слишком большой. Максимум — ${MAX_SIZE_MB} МБ`);
-                return false;
-            }
-            return true;
-        };
-        */
-
         const uploadFile = async (file) => {
             /* if (!validateFile(file)) return; */
 

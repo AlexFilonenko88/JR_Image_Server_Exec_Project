@@ -314,7 +314,6 @@ body {
 /* Delete button */
 .delete-btn {
     background: transparent;
-    /* REMOVE THE BACKGROUND, MAKE IT TRANSPARENT */
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -323,22 +322,19 @@ body {
     justify-content: center;
     padding: 0;
     transition: opacity 0.2s ease;
-    /* Add a smooth transition for hover effect */
 }
 
 /* Hover effect */
 .delete-btn:hover {
     background: transparent;
-    /* REMOVE BACKGROUND ON HOVER */
     opacity: 0.7;
-    /* Make the icon semi-transparent for user feedback */
 }
 
 /* Для страницы images */
 #file-list-wrapper {
     padding: 16px 24px;
     background: #f0f2fb;
-    margin: 0 auto; /* центрирует блок по горизонтали */
+    margin: 0 auto;
     width: 100%;
     max-width: 1100px;
 }
@@ -424,8 +420,6 @@ body {
 }
 
 /* Новые стили */
-
-
 .file-table th:nth-child(1),
 .file-table td:nth-child(1) {
     width: 80px;

@@ -27,7 +27,7 @@
         <a href="/upload" class="upload__tab" id="images-tab-btn">
             Загрузите изображение
         </a>
-        <a href="/images_list/" class="upload__tab" id="images-tab-btn">
+        <a href="/images_list/" class="upload__tab upload__tab--active" id="images-tab-btn">
             Загруженные изображения
         </a>
     </nav>
@@ -45,27 +45,27 @@
             <tr>
                 <td class="preview-cell">
                 <img
-                    src="/images/{{ image }}"
-                    alt="{{ image }}"
+                    src="/images/{{ image.filename }}"
+                    alt="{{ image.original_name }}"
                     class="preview-thumb"
                 >
                 </td>
-                <td class="filename-cell" title="{{ image }}">
-                {{ image }}
+                <td class="filename-cell" title="{{ image.original_name }}">
+                {{ image.filename }}
                 </td>
                 <td class="link-cell">
                     <div class="upload__label">
                         <input
                             type="text"
                             class="upload__input public-link-input"
-                            value="{{ request.app.url_path_for('images_static', path=image) }}"
-                            title="{{ request.app.url_path_for('images_static', path=image) }}"
+                            value="{{ request.app.url_path_for('images_static', path=image.filename) }}"
+                            title="{{ request.app.url_path_for('images_static', path=image.filename) }}"
                             readonly
                         >
                         <button class="upload__copy">КОПИРОВАТЬ</button>
                     </div>
                     <a
-                        href="{{ request.app.url_path_for('images_static', path=image) }}"
+                        href="{{ request.app.url_path_for('images_static', path=image.filename) }}"
                         class="copy-btn"
                         target="_blank"
                         rel="noopener"
@@ -76,15 +76,46 @@
                 <td class="action-cell">
                     <button
                         class="upload__delete"
-                        data-filename="{{ image }}"
+                        data-filename="{{ image.filename }}"
                     >
                         УДАЛИТЬ
                     </button>
                 </td>
             </tr>
+            {% else %}
+            <tr>
+                <td class="empty-cell" colspan="4">Изображений пока нет.</td>
+            </tr>
             {% endfor %}
             </tbody>
         </table>
+
+        <nav class="pagination" aria-label="Пагинация списка изображений">
+            {% if has_prev %}
+            <a class="pagination__btn" href="/images_list?page={{ current_page - 1 }}">
+                &larr; Предыдущая страница
+            </a>
+            {% else %}
+            <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">
+                &larr; Предыдущая страница
+            </span>
+            {% endif %}
+
+            <span class="pagination__info">
+                Страница {{ current_page }} из {{ total_pages }}, всего
+                {{ total_images }} {{ total_images_word }}
+            </span>
+
+            {% if has_next %}
+            <a class="pagination__btn" href="/images_list?page={{ current_page + 1 }}">
+                Следующая страница &rarr;
+            </a>
+            {% else %}
+            <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">
+                Следующая страница &rarr;
+            </span>
+            {% endif %}
+        </nav>
     </section>
     <script src="../js/upload.js"></script>
 </body>

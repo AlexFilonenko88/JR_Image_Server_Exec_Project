@@ -91,5 +91,15 @@ async def delete_uploaded_file(filename: str, UPLOAD_DIR: Path) -> bool:
     return await asyncio.to_thread(_delete)
 
 
-if __name__ == "__main__":
-    pass
+def pluralize(count: int, one: str, few: str, many: str) -> str:
+    """Склонение существительного при числительном: 1 элемент / 2 элемента / 5 элементов."""
+
+    n = abs(count) % 100
+    if 11 <= n <= 14:
+        return many
+    last = n % 10
+    if last == 1:
+        return one
+    if 2 <= last <= 4:
+        return few
+    return many

@@ -1,13 +1,17 @@
 import asyncio
 import logging
 import os
+from typing import Any
 
 import psycopg
 from dotenv import load_dotenv
+from psycopg.rows import dict_row
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+
+PAGE_SIZE = 10
 
 
 async def get_connection_db() -> psycopg.AsyncConnection:
@@ -122,6 +126,57 @@ async def delete_image_db(filename: str) -> None:
             logger.info(
                 "После удаления данных из таблицы images_server, соединение с базой данных закрыто"
             )
+            await conn.close()
+
+
+async def get_images_page_db(limit: int, offset: int) -> list[dict[str, Any]]:
+    """Получение страницы изображений: LIMIT/OFFSET, свежие записи сверху"""
+
+    query = """
+        SELECT * FROM images_server
+        ORDER BY upload_time DESC
+        LIMIT %s OFFSET %s;
+    """
+
+    conn = None
+    try:
+        conn = await get_connection_db()
+        async with conn.cursor(row_factory=dict_row) as cur:
+            await cur.execute(query, (limit, offset))
+            rows = await cur.fetchall()
+        logger.info(f"Получена страница изображений: limit={limit}, offset={offset}")
+        return [dict(row) for row in rows]
+    except Exception as e:
+        logger.info(f"Ошибка получения страницы изображений: {e}")
+        return []
+    finally:
+        if conn:
+            logger.info("После получения страницы изображений, соединение закрыто")
+            await conn.close()
+
+
+async def count_images_db() -> int:
+    """Подсчёт количества изображений для расчёта числа страниц"""
+
+    query = """
+        SELECT COUNT(*) FROM images_server;
+    """
+
+    conn = None
+    try:
+        conn = await get_connection_db()
+        async with conn.cursor() as cur:
+            await cur.execute(query)
+            row = await cur.fetchone()
+        total = int(row[0]) if row else 0
+        logger.info(f"Всего изображений в базе: {total}")
+        return total
+    except Exception as e:
+        logger.info(f"Ошибка подсчёта изображений: {e}")
+        return 0
+    finally:
+        if conn:
+            logger.info("После подсчёта изображений, соединение закрыто")
             await conn.close()
 
 

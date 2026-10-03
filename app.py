@@ -6,14 +6,17 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from utils.db_utils import (
+    PAGE_SIZE,
+    count_images_db,
     create_table_db,
     delete_image_db,
+    get_images_page_db,
     insert_image_db,
     test_connection_db,
 )
@@ -23,6 +26,7 @@ from utils.file_utils import (
     get_list_uploaded_images,
     get_unique_name,
     is_allowed_expansion_file_name,
+    pluralize,
     save_uploaded_file,
 )
 from utils.gap_separator_file_handler import GapSeparatorFileHandler
@@ -83,17 +87,35 @@ async def index(request: Request):
 
 
 @app.get("/images_list", response_class=HTMLResponse)
-async def images(request: Request):
-    """Страница изображений сервиса."""
+async def images(request: Request, page: int = Query(default=1, ge=1)):
+    """Страница изображений сервиса. Постраничная навигация по PAGE_SIZE записей."""
 
-    images = await get_list_uploaded_images(UPLOAD_DIR)
-    logger.info(f'Получен список изображений: {images}, для "images"')
+    total_images = await count_images_db()
+    # ceil(total / PAGE_SIZE), минимум одна страница — чтобы ссылки не ломались на пусто
+    total_pages = max(1, -(-total_images // PAGE_SIZE))
+    # защита от page за пределами диапазона (например после удаления записей)
+    current_page = min(page, total_pages)
+    offset = (current_page - 1) * PAGE_SIZE
+
+    images = await get_images_page_db(PAGE_SIZE, offset)
+    logger.info(
+        f"Страница {current_page}/{total_pages}, offset={offset}, "
+        f"записей на странице: {len(images)}"
+    )
 
     return templates.TemplateResponse(
         request=request,
         name="images_list.html",
         context={
             "images": images,
+            "current_page": current_page,
+            "total_pages": total_pages,
+            "total_images": total_images,
+            "total_images_word": pluralize(
+                total_images, "элемент", "элемента", "элементов"
+            ),
+            "has_prev": current_page > 1,
+            "has_next": current_page < total_pages,
         },
     )
 

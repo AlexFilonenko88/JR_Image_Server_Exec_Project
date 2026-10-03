@@ -143,7 +143,18 @@ document.addEventListener('click', async (event) => {
             throw new Error('Ошибка удаления');
         }
 
-        btn.closest('tr').remove();
+        const row = btn.closest('tr');
+        const tbody = row.closest('tbody');
+        row.remove();
+
+        // На странице не осталось записей, а страница не первая — уходим на предыдущую,
+        // иначе пагинация покажет пустую выборку за пределами данных.
+        const hasRows = tbody && tbody.querySelector('tr:not(:has(.empty-cell))');
+        const params = new URLSearchParams(window.location.search);
+        const page = parseInt(params.get('page') || '1', 10);
+        if (!hasRows && page > 1) {
+            window.location.href = `/images_list?page=${page - 1}`;
+        }
     } catch (err) {
         alert('Не удалось удалить файл');
         console.error(err);

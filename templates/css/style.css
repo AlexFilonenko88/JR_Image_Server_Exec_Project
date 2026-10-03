@@ -465,3 +465,51 @@ body {
 .upload__delete:hover {
     background: #eef1ff;
 }
+
+/* Пагинация списка изображений */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 24px 0 8px;
+}
+
+.pagination__btn {
+    background: #fff;
+    border: 1px solid #3b5bfd;
+    color: #3b5bfd;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.pagination__btn:hover {
+    background: #eef1ff;
+}
+
+/* Отключённая кнопка: не ссылка, клика не будет, курсор обычный */
+.pagination__btn--disabled {
+    border-color: #c9cfe6;
+    color: #a7aec9;
+    background: #f4f6fc;
+    pointer-events: none;
+    cursor: default;
+}
+
+.pagination__info {
+    color: #1c2333;
+    font-size: 14px;
+}
+
+.empty-cell {
+    color: #8890a3;
+    font-size: 14px;
+    text-align: center;
+    padding: 24px 8px;
+}

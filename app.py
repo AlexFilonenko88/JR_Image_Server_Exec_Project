@@ -1,7 +1,5 @@
 import asyncio
-import datetime
 import logging
-import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -91,9 +89,7 @@ async def images(request: Request, page: int = Query(default=1, ge=1)):
     """Страница изображений сервиса. Постраничная навигация по PAGE_SIZE записей."""
 
     total_images = await count_images_db()
-    # ceil(total / PAGE_SIZE), минимум одна страница — чтобы ссылки не ломались на пусто
     total_pages = max(1, -(-total_images // PAGE_SIZE))
-    # защита от page за пределами диапазона (например после удаления записей)
     current_page = min(page, total_pages)
     offset = (current_page - 1) * PAGE_SIZE
 
@@ -191,5 +187,4 @@ async def delete_image(filename: str):
 
 
 if __name__ == "__main__":
-    # uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
-    uvicorn.run("app:app", host="127.0.0.1", port=8000)
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
